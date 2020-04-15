@@ -3,17 +3,21 @@ import uuid from 'node-uuid';
 import cassandra from 'cassandra-driver';
 
 import client from '../cassandra/client.mjs';
+import bookMapper from "../mappers/book.mjs";
 
 import {BOOKS_TABLE} from '../constants/index.mjs';
 
 export const getBooks = async (req, res) => {
-  const query = `SELECT * FROM ${BOOKS_TABLE}`;
-  const result = await client.execute(query, []);
+  try {
+    const result = await bookMapper.findAll();
 
-  res.json({books: result.rows});
+    res.json({books: result.toArray()});
+  } catch (err) {
+    res.status(500).json({err: err.toString()});
+  }
 };
 
-export const createBook = async (req, res) => {
+export const createBook = (req, res) => {
   const query = `
   INSERT INTO ${BOOKS_TABLE}
     (id, title, author, description, isbn)
@@ -33,7 +37,6 @@ export const createBook = async (req, res) => {
     {prepare: true, consistency: cassandra.types.consistencies.localQuorum},
     (err, result) => {
       if (err) {
-        console.log({err});
         res.status(500).json({message: err.toString()});
       } else {
         res.json({result});
@@ -41,3 +44,21 @@ export const createBook = async (req, res) => {
     }
   );
 };
+
+export const deleteBook = (req, res) => {
+  console.log(`deleting book with id = ${req.params.id}`);
+  const query = `DELETE FROM ${BOOKS_TABLE} WHERE id = :id`;
+
+  client.execute(
+    query,
+    {id: req.params.id},
+    {prepare: true},
+    (err, result) => {
+      if (err) {
+        res.status(500).json({message: err.toString()});
+      } else {
+        res.json({result});
+      }
+    }
+  )
+}
