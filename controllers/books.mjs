@@ -40,20 +40,12 @@ export const createBook = async (req, res) => {
   }
 };
 
-export const deleteBook = (req, res) => {
-  console.log(`deleting book with id = ${req.params.id}`);
-  const query = `DELETE FROM ${BOOKS_TABLE} WHERE id = :id`;
+export const deleteBook = async (req, res) => {
+  try {
+    await bookMapper.remove({id: req.params.id});
 
-  client.execute(
-    query,
-    {id: req.params.id},
-    {prepare: true},
-    (err, result) => {
-      if (err) {
-        res.status(500).json({message: err.toString()});
-      } else {
-        res.json({result});
-      }
-    }
-  )
-}
+    res.status(200).end();
+  } catch (err) {
+    res.status(500).json({err: err.toString()});
+  }
+};
