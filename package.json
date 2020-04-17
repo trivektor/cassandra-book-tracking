@@ -9,12 +9,11 @@
   "author": "trivektor@gmail.com",
   "license": "MIT",
   "dependencies": {
-    "body-parser": "^1.19.0",
     "cassandra-driver": "^4.5.1",
-    "cors": "^2.8.5",
     "express": "^4.17.1",
     "faker": "^4.1.0",
     "fs": "0.0.1-security",
+    "lodash": "^4.17.15",
     "path": "^0.12.7",
     "url": "^0.11.0"
   },

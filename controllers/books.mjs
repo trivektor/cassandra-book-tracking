@@ -1,6 +1,7 @@
 import faker from 'faker';
 import uuid from 'node-uuid';
 import cassandra from 'cassandra-driver';
+import _ from 'lodash';
 
 import client from '../cassandra/client.mjs';
 import bookMapper from "../mappers/book.mjs";
@@ -43,6 +44,19 @@ export const createBook = async (req, res) => {
 export const deleteBook = async (req, res) => {
   try {
     await bookMapper.remove({id: req.params.id});
+
+    res.status(200).end();
+  } catch (err) {
+    res.status(500).json({err: err.toString()});
+  }
+};
+
+export const updateBook = async (req, res) => {
+  try {
+    await bookMapper.update({
+      id: req.params.id,
+      ..._.pick(req.body, ["title", "author", "description", "publisher", "genre"]),
+    });
 
     res.status(200).end();
   } catch (err) {
