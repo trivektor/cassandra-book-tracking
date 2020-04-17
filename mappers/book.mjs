@@ -25,6 +25,7 @@ const client = new cassandra.Client({
   keyspace: AWS_KEYSPACE,
   sslOptions,
   authProvider,
+  queryOptions: {consistency: cassandra.types.consistencies.localQuorum},
 });
 const mapper = new cassandra.mapping.Mapper(client, {
   models: {

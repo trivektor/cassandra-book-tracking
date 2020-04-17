@@ -17,32 +17,27 @@ export const getBooks = async (req, res) => {
   }
 };
 
-export const createBook = (req, res) => {
-  const query = `
-  INSERT INTO ${BOOKS_TABLE}
-    (id, title, author, description, isbn)
-  VALUES
-    (:id, :title, :author, :description, :isbn)
-  `;
+export const createBook = async (req, res) => {
+  const {
+    title = faker.random.words(),
+    author = `${faker.name.firstName()} ${faker.name.lastName()}`,
+    description = faker.lorem.paragraph(),
+    publisher = faker.company.companyName(),
+  } = req.body;
 
-  client.execute(
-    query,
-    {
+  try {
+    const result = await bookMapper.insert({
       id: uuid.v4(),
-      title: faker.lorem.words(4),
-      author: `${faker.name.firstName()} ${faker.name.lastName()}`,
-      description: faker.lorem.text(),
-      isbn: faker.random.uuid(),
-    },
-    {prepare: true, consistency: cassandra.types.consistencies.localQuorum},
-    (err, result) => {
-      if (err) {
-        res.status(500).json({message: err.toString()});
-      } else {
-        res.json({result});
-      }
-    }
-  );
+      title,
+      author,
+      description,
+      publisher,
+    });
+
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({err: err.toString()});
+  }
 };
 
 export const deleteBook = (req, res) => {
