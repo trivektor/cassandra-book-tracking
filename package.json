@@ -9,10 +9,14 @@
   "author": "trivektor@gmail.com",
   "license": "MIT",
   "dependencies": {
+    "apollo-server": "^2.12.0",
     "cassandra-driver": "^4.5.1",
     "express": "^4.17.1",
+    "express-graphql": "^0.9.0",
     "faker": "^4.1.0",
     "fs": "0.0.1-security",
+    "graphql": "^15.0.0",
+    "graphql-tag": "^2.10.3",
     "lodash": "^4.17.15",
     "path": "^0.12.7",
     "url": "^0.11.0"
