@@ -9,7 +9,7 @@
   "author": "trivektor@gmail.com",
   "license": "MIT",
   "dependencies": {
-    "apollo-server": "^2.12.0",
+    "apollo-server": "^2.14.2",
     "cassandra-driver": "^4.5.1",
     "express": "^4.17.1",
     "express-graphql": "^0.9.0",
